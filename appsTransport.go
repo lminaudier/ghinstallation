@@ -60,9 +60,10 @@ func NewAppsTransport(tr http.RoundTripper, integrationID int, privateKey []byte
 
 // RoundTrip implements http.RoundTripper interface.
 func (t *AppsTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	now := time.Now()
 	claims := &jwt.StandardClaims{
-		IssuedAt:  time.Now().Unix(),
-		ExpiresAt: time.Now().Add(time.Minute).Unix(),
+		IssuedAt:  now.Unix(),
+		ExpiresAt: now.Add(10 * time.Minute).Unix(),
 		Issuer:    strconv.Itoa(t.integrationID),
 	}
 	bearer := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
